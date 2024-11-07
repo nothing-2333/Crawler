@@ -8,11 +8,20 @@
 ### Encrypt Encrypt.py
 py 整合所有加密，为 main.py 提供服务
 
-### Encrypt Encrypt.js
+### Encrypt encrypt.js
 js 加密逻辑实现，存放网页扣下来的代码，为 Encrypt.py 提供服务
 
-### Encrypt Base.py
+### Encrypt base.py
 py 内置的一些经典加密，将其封装为函数，为 Encrypt.py 提供服务
 
-### 笔记.md test.py
-笔记与 py 测试代码
+### Encrypt utiles.py
+自定义一些 py 工具函数
+
+### Test
+写测试代码
+
+### JsCall
+py 调用 js 模块
+
+### 笔记.md
+笔记与 py 

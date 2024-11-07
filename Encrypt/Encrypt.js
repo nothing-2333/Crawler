@@ -1,6 +1,7 @@
 // 自定义 js 加密，并测试
 
-function jSONStringify(data)
+function jsonStringify(data)
 {
     return JSON.stringify(data)
 }
+
