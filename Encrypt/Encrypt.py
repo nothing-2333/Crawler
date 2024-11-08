@@ -31,9 +31,10 @@ class Encrypt:
         
     def base64Encode(self, data):
         return self.baseCall("base64Encode", data)
+    
 
 if __name__ == "__main__":
     e = Encrypt()
-    print(e.base64Encode("nothing"))
+    print(e.baseAndMD5("nothing"))
     print(e.jsonStringify({"a" : None}))
     

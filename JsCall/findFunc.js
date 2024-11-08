@@ -6,8 +6,8 @@ const generator = require('@babel/generator').default;
 
 // 获取文件名
 const args = process.argv.slice(2);
-// let fileName = args[0] 
-let fileName = "Encrypt/encrypt.js"
+let fileName = args[0] 
+// let fileName = "Encrypt/encrypt.js"
 
 // 获取函数列表
 const code = fs.readFileSync(fileName, 'utf8');
