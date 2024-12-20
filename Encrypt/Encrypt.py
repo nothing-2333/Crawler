@@ -11,7 +11,6 @@ class Encrypt:
         Encrypt.appendSearch("Encrypt")
         from JsCall import JsCall
         import base
-        
         self.base = base
         self.js = JsCall.load(filePath)
     
