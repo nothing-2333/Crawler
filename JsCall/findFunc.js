@@ -7,7 +7,6 @@ const generator = require('@babel/generator').default;
 // 获取文件名
 const args = process.argv.slice(2);
 let fileName = args[0] 
-// let fileName = "Encrypt/encrypt.js"
 
 // 获取函数列表
 const code = fs.readFileSync(fileName, 'utf8');
@@ -21,7 +20,7 @@ traverse(ast, {
   {
     if (path.parent.type == 'Program')  // 全局作用域
     {    
-        // // 剔除函数中的标准输出
+        // 剔除函数中的标准输出
         path.traverse({
           	CallExpression(childPath)
 			{

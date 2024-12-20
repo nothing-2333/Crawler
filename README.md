@@ -7,7 +7,13 @@
 ```shell
 npm install
 ```
+## JsCall单独使用
+```py
+from JsCall import JsCall
 
+js = JsCall.load(filePath) # filePath是要调用js的相对路径（当对于整个项目），返回一个实例，加载好了函数名到其代码的映射
+retulet = js.call(functionName, arg1, arg2, arg3, ...) # functionName要调用的函数名，后面跟上它的参数
+```
 ### main.py
 请求逻辑实现，
 

@@ -6,12 +6,14 @@ class JsCall:
     def __init__(self, funcMap: dict) -> None:
         self.funcMap = funcMap
     
+    # 输入函数名调用方法
     def call(self, funcName: str, *args):
         paramStr = json.dumps(args)
         jsCode = self.funcMap[funcName] + ";" + "console.log(JSON.stringify({result:" + funcName + f"(...{paramStr})" + "}));"
         result = JsCall.runJs(jsCode)
         return json.loads(result)["result"]
     
+    # 加载文件返回实例
     @staticmethod
     def load(fileName: str):
         workDirectory = os.getcwd() # 当前工作目录
@@ -20,6 +22,7 @@ class JsCall:
         jsCall = JsCall(funcMap)
         return jsCall
     
+    # 构建funcMap，以函数名为key，其代码为value
     @staticmethod
     def findFuncs(filePath: str) -> dict:
         workDirectory = os.getcwd() # 当前工作目录
@@ -31,6 +34,7 @@ class JsCall:
         else:
             raise RuntimeError(result.stderr[:-1])
     
+    # 运行js代码
     @staticmethod
     def runJs(code: str) -> str:
         with subprocess.Popen(['node', '--trace-uncaught', '-'], 
