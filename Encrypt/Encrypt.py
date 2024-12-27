@@ -5,7 +5,7 @@ from JsCall import JsCall
 from . import standard
 
 class Encrypt:
-    def __init__(self, filePath="./Encrypt/encrypt.js") -> None:
+    def __init__(self, filePath="./Encrypt/Encrypt.js") -> None:
         self.standard = standard
         self.js = JsCall.load(filePath)
     
