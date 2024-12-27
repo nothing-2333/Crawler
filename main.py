@@ -6,7 +6,7 @@ class Crawler:
         self.encrypt = Encrypt()
      
     def run(self):
-        self.encrypt.base64Encode("asd")
+        print(self.encrypt.base64Encode("asd"))
         print("请求流程构建...")
 
 

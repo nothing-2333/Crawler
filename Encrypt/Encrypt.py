@@ -1,7 +1,5 @@
 # 自定义 python 加密，并融合 js加密
 
-import sys
-import os
 import json
 from JsCall import JsCall
 from . import standard
