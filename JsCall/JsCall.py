@@ -5,17 +5,26 @@ import json
 class JsCall:
     def __init__(self, funcMap: dict) -> None:
         self.funcMap = funcMap
+        self.funcCode = ""
+        for func in funcMap.values():
+            self.funcCode += func
+            self.funcCode += ";"
+        
     
     # 输入函数名调用方法
     def call(self, funcName: str, *args):
         paramStr = json.dumps(args)
-        jsCode = self.funcMap[funcName] + ";" + "console.log(JSON.stringify({result:" + funcName + f"(...{paramStr})" + "}));"
+        jsCode = self.funcCode + "console.log(JSON.stringify({result:" + funcName + f"(...{paramStr})" + "}));"
         result = JsCall.runJs(jsCode)
         return json.loads(result)["result"]
     
+
     # 加载文件返回实例
     @staticmethod
-    def load(fileName: str):
+    def load(jsFilePaths: list):
+        if not isinstance(jsFilePaths, list):
+            raise TypeError("需要一个 list 对象。")
+        
         workDirectory = os.getcwd() # 当前工作目录
         filePath = os.path.join(workDirectory, fileName) # 完整文件路径
         funcMap = JsCall.findFuncs(filePath)
