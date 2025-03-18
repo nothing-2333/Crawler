@@ -1,16 +1,18 @@
 import requests
+from loguru import logger
 
+from crawler import Crawler
 from Encrypt import Encrypt
 
-class Crawler:
-    def __init__(self) -> None:
-        self.encrypt = Encrypt("encrypt/utils.js")
-     
-    def run(self):
-        print(self.encrypt.jsonStringify({"a" : None}))
-        print("请求流程构建...")
 
+def run(crawler: Crawler, encrypt: Encrypt):
+    crawler.logger.debug("请求开始...")
+    encrypt.test()
+    
 
 if __name__ == "__main__":
-    crawler = Crawler()
-    crawler.run()
+    crawler = Crawler(requests, logger)
+    encrypt = Encrypt()
+    run(crawler, encrypt)
+
+    
