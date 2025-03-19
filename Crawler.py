@@ -13,7 +13,7 @@ class Crawler:
         self.encrypt = Encrypt(logger)
         self.encrypt.test()
 
-        
+    
         
 if __name__ == "__main__":
     pass
