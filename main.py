@@ -3,14 +3,15 @@ from loguru import logger
 
 from Crawler import Crawler
 from Encrypt import Encrypt
+from Env import Env, env
 
 
-def run(crawler: Crawler, encrypt: Encrypt, **kwargs):
+def run(crawler: Crawler, encrypt: Encrypt, env: Env):
     debug = crawler.debug
     debug("请求开始...")
     
     encrypt.test()
-    debug(kwargs)
+
     
 
 if __name__ == "__main__":
