@@ -19,6 +19,6 @@ if __name__ == "__main__":
     crawler = Crawler(session, logger)
     encrypt = Encrypt(logger)
 
-    run(crawler, encrypt)
+    run(crawler, encrypt, env)
 
     
