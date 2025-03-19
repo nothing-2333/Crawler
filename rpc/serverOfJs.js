@@ -1,5 +1,5 @@
 
-function rpc(port=2333)
+function rpc(port)
 {
     const net = require('net');
 
@@ -27,5 +27,5 @@ function rpc(port=2333)
     
     server.listen(port, '127.0.0.1');
 }
-rpc()
 
+rpc(+process.argv[2])

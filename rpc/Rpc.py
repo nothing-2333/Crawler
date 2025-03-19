@@ -2,6 +2,7 @@ import socket
 import json
 import multiprocessing
 import os
+import subprocess
 
 class Rpc:
     def __init__(self):
@@ -37,8 +38,8 @@ class Rpc:
             return None
     
     # 建立本地 Socket
-    def buildSocket(self, server, init_code="", port=2333):
-        self.process = multiprocessing.Process(target=server)
+    def buildSocket(self, server, init_code, port):
+        self.process = multiprocessing.Process(target=server, kwargs={"port": port})
         self.process.daemon = True  # 设置为守护进程：主进程结束时，子进程也结束
         self.process.start()
 
@@ -57,15 +58,31 @@ class Rpc:
             self.process.join()  # 等待子进程完全退出
             self.process = None
             
-    # rpc 调用 js
+    # 读取文件中代码
     @staticmethod
-    def serverOfJs():
-        import subprocess
+    def readCode(file_path):
+        with open(file_path, "r", encoding="utf8") as file:
+            content = file.read()
+        return content
+    
+    # 运行制定 js 文件，启动 socket 服务
+    @staticmethod
+    def serverOfJs(port):
         file_path = os.path.join(__file__, "..", "serverOfJs.js")
-        subprocess.run(["node", file_path], check=True)
-        print(111)
-
-
+        command = ["node", file_path, str(port)]
+        subprocess.run(command, check=True)
+    
+    # 启动 js 的 RPC 服务
+    @staticmethod
+    def buildServerOfJs(file_names, port) -> "Rpc":
+        jscode = ""
+        for name in file_names:
+            jscode += Rpc.readCode(name)
+        js = Rpc()
+        js.buildSocket(Rpc.serverOfJs, jscode, port)
+        
+        return js
+            
 
 if __name__ == "__main__":
     
@@ -74,5 +91,5 @@ if __name__ == "__main__":
     res = rpc.call("a", 1, 2)
     rpc.close()
     
-    print(res)
+    # print(res)
 
