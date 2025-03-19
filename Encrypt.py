@@ -8,7 +8,7 @@ class Encrypt:
         self.debug = logger.debug
         self.error = logger.error
         
-        # js
+        # 用 js 测试，不用的话可以换成别的
         file_path = os.path.join(os.path.abspath(__file__), "..","encrypt", "base.js")
         self.js = Rpc.buildServerOfJs([file_path], 2333)
 

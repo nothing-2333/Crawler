@@ -1,4 +1,4 @@
-
+from Encrypt import Encrypt
 
 class Crawler:
     def __init__(self, requests, logger) -> None:
@@ -9,6 +9,9 @@ class Crawler:
         self.requests = requests
         self.get = requests.get
         self.post = requests.post
+        
+        self.encrypt = Encrypt(logger)
+        self.encrypt.test()
 
         
         
