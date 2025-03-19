@@ -1,38 +1,36 @@
 import json
-import os
+
 
 class Env:
     def __init__(self):
-        self.env = {}
+        self.data = {}
     
     def has(self, key) -> bool:
-        if key in self.env:
+        if key in self.data:
             return True
         else:
             return False
     
-    def add(self, key, value):
-        if not self.has(key):
-            self.env[key] = []
-        self.env[key].append(value)
+    def update(self, key, value):
+        self.data[key] = value
     
     def get(self, key):
         if not self.has(key):
             return None
-        return self.env[key]
-    
-    # 从 json 文件中加载环境
-    def loadFromJson(self, file_path):
-        with open(file_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-        for key, value in data.items():
-            self.add(key, value)
+        return self.data[key]
     
     def download(self, file_path):
         with open(file_path, 'w', encoding='utf-8') as file:
-            json.dump(self.env, file, ensure_ascii=False, indent=4)
+            json.dump(self.data, file, ensure_ascii=False, indent=4)
     
-
-env = Env()
-file_path = os.path.join(os.path.abspath(__file__), "..","env", "base.json")
-env.loadFromJson(file_path)
+    # 用 json 文件加载实例
+    @staticmethod
+    def loadFromJson(file_path):
+        env = Env()
+        
+        with open(file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        for key, value in data.items():
+            env.update(key, value)
+            
+        return env
