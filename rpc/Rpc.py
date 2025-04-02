@@ -46,6 +46,7 @@ class Rpc:
         self.socket.connect(('127.0.0.1', port))
         
         # 加载初始化代码
+        self.call("eval", "let require = global.require;") # 正确处理 require
         self.call("eval", init_code)
     
     # 关闭资源

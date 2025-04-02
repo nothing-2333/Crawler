@@ -1,3 +1,4 @@
+global.require = require;   // 正确处理 require
 
 function rpc(port)
 {
