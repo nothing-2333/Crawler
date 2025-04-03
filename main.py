@@ -3,20 +3,19 @@ from loguru import logger
 import os
 
 from Crawler import Crawler
-from Env import Env
+from env import Env
 
 
 def run(env: Env, crawler: Crawler):
     debug = crawler.debug
     debug("请求开始...")
 
-    debug(env.data)
+    debug(env.data_path)
 
     
 
 if __name__ == "__main__":
-    file_path = os.path.join(os.path.abspath(__file__), "..","env", "base.json")
-    env = Env.loadFromJson(file_path)
+    env = Env()
     
     session = requests.Session()
     crawler = Crawler(session, logger)
