@@ -6,17 +6,12 @@ from env import Env
 
 debug = logger.debug
 
-
-def run(env: Env, crawler: Crawler):
-    debug("请求开始...")
-
-
 if __name__ == "__main__":
-    env = Env()
-    
     session = requests.Session()
     crawler = Crawler(session)
+    crawler.encrypt.test()
     
-    run(env, crawler)
+    env = Env()
+    debug(env.data)
 
     
