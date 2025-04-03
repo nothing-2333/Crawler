@@ -1,7 +1,7 @@
 import os
 from loguru import logger
 
-from rpc import Rpc
+from .rpc import Rpc
 
 debug = logger.debug
 
