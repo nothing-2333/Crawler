@@ -37,13 +37,25 @@ class Rpc:
         else:
             return None
     
+    @staticmethod
+    def getRandomFreePort():
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind(('', 0))
+        port = s.getsockname()[1]
+        s.close()
+        return port
+    
     # 建立本地 Socket
-    def buildSocket(self, server, init_code, port):
+    def buildSocket(self, server, init_code):
+        # 分配一个随机空闲端口
+        port = Rpc.getRandomFreePort()
+        
         self.process = multiprocessing.Process(target=server, kwargs={"port": port})
         self.process.daemon = True  # 设置为守护进程：主进程结束时，子进程也结束
         self.process.start()
 
         self.socket.connect(('127.0.0.1', port))
+        self.port = port
         
         # 加载初始化代码
         self.call("eval", "let require = global.require;") # 正确处理 require
@@ -75,22 +87,14 @@ class Rpc:
     
     # 启动 js 的 RPC 服务
     @staticmethod
-    def buildServerOfJs(file_names, port) -> "Rpc":
+    def buildServerOfJs(file_paths) -> "Rpc":
         jscode = ""
-        for name in file_names:
-            jscode += Rpc.readCode(name)
+        for path in file_paths:
+            jscode += Rpc.readCode(path)
         js = Rpc()
-        js.buildSocket(Rpc.serverOfJs, jscode, port)
+        js.buildSocket(Rpc.serverOfJs, jscode)
         
         return js
             
 
-if __name__ == "__main__":
-    
-    rpc = Rpc()
-    rpc.buildSocket(Rpc.serverOfJs, "function a(){return 1;}")
-    res = rpc.call("a", 1, 2)
-    rpc.close()
-    
-    # print(res)
 

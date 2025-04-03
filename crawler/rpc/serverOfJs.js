@@ -9,7 +9,7 @@ function rpc(port)
         socket.on('data', (data) => {
             let { funcName, args } = JSON.parse(data.toString())
             let response = ""
-    
+            
             // 动态调用函数
             if (funcName != undefined)
             {
@@ -21,7 +21,7 @@ function rpc(port)
             const length = Buffer.byteLength(response);
             response = length.toString().padStart(4, '0') + response
 
-            // console.log(funcName, args, response);
+            console.log(funcName, args, response);
             socket.write(response);
         });
     });
