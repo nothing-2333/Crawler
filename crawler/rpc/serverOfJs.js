@@ -21,7 +21,7 @@ function rpc(port)
             const length = Buffer.byteLength(response);
             response = length.toString().padStart(4, '0') + response
 
-            console.log(funcName, args, response);
+            // console.log(funcName, args, response);
             socket.write(response);
         });
     });

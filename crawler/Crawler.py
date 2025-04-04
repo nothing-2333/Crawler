@@ -1,6 +1,6 @@
 from loguru import logger 
 
-from .Encrypt import Encrypt
+from .encrypt import Encrypt
 
 debug = logger.debug
 
