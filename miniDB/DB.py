@@ -44,16 +44,3 @@ class DB:
         """
         return self.data.get(key)
     
-
-# 示例用法
-if __name__ == "__main__":
-    db = DB()
-    
-    # 更新数据
-    db.update("name", "Alice")
-    db.update("age", 30)
-    print(db.keys())
-    print(db.get("name"))
-    db.clean()
-    print(db.data)
-    db.save()

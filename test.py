@@ -3,6 +3,7 @@ from loguru import logger
 
 from crawler import Crawler
 from env import Env
+from miniDB import DB
 
 debug = logger.debug
 
@@ -14,4 +15,13 @@ if __name__ == "__main__":
     env = Env()
     debug(env.data)
 
+    db = DB()
     
+    # 更新数据
+    db.update("name", "Alice")
+    db.update("age", 30)
+    print(db.keys())
+    print(db.get("name"))
+    db.clean()
+    print(db.data)
+    db.save()
