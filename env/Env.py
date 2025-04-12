@@ -3,12 +3,15 @@ import os
 import random
 
 class Env:
-    def __init__(self):
+    def __init__(self, file_name=None):
         self.data = {}
         
         fingerprints_store_path = os.path.join(os.path.abspath(__file__), "..","fingerprints_store")
-        self.data_path = Env.getRandomJsonFile(fingerprints_store_path)
-        
+        if file_name == None:
+            self.data_path = Env.getRandomJsonFile(fingerprints_store_path)
+        else:
+            self.data_path = os.path.join(fingerprints_store_path, file_name)
+
         self.loadFromJson(self.data_path)
         
     

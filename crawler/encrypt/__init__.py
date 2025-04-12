@@ -1,1 +1,1 @@
-from .Encrypt import Encrypt
+from .encrypt import Encrypt
