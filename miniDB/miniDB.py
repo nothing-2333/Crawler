@@ -1,7 +1,7 @@
 import json
 import os
 
-class DB:
+class miniDB:
     def __init__(self):
         self.file_path = os.path.join(os.path.abspath(__file__), "..","data.json")
 

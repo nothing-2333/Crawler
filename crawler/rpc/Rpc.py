@@ -38,7 +38,7 @@ class Rpc:
             return None
     
     @staticmethod
-    def getRandomFreePort():
+    def get_random_free_port():
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(('', 0))
         port = s.getsockname()[1]
@@ -46,9 +46,9 @@ class Rpc:
         return port
     
     # 建立本地 Socket
-    def buildSocket(self, server, init_code):
+    def build_socket(self, server, init_code):
         # 分配一个随机空闲端口
-        port = Rpc.getRandomFreePort()
+        port = Rpc.get_random_free_port()
         
         self.process = multiprocessing.Process(target=server, kwargs={"port": port})
         self.process.daemon = True  # 设置为守护进程：主进程结束时，子进程也结束
@@ -73,26 +73,26 @@ class Rpc:
             
     # 读取文件中代码
     @staticmethod
-    def readCode(file_path):
+    def read_code(file_path):
         with open(file_path, "r", encoding="utf8") as file:
             content = file.read()
         return content
     
     # 运行制定 js 文件，启动 socket 服务
     @staticmethod
-    def serverOfJs(port):
-        file_path = os.path.join(__file__, "..", "serverOfJs.js")
+    def server_of_js(port):
+        file_path = os.path.join(__file__, "..", "server_of_js.js")
         command = ["node", file_path, str(port)]
         subprocess.run(command, check=True)
     
     # 启动 js 的 RPC 服务
     @staticmethod
-    def buildServerOfJs(file_paths) -> "Rpc":
+    def build_server_of_js(file_paths) -> "Rpc":
         jscode = ""
         for path in file_paths:
-            jscode += Rpc.readCode(path)
+            jscode += Rpc.read_code(path)
         js = Rpc()
-        js.buildSocket(Rpc.serverOfJs, jscode)
+        js.build_socket(Rpc.server_of_js, jscode)
         
         return js
             

@@ -1,1 +1,1 @@
-from .DB import DB
+from .miniDB import miniDB

@@ -3,7 +3,7 @@ from loguru import logger
 
 from crawler import Crawler
 from env import Env
-from miniDB import DB
+from miniDB import miniDB
 
 debug = logger.debug
 
@@ -14,7 +14,7 @@ def run(env: Env, crawler: Crawler):
 
 if __name__ == "__main__":
     env = Env()
-    db = DB()
+    db = miniDB()
     
     session = requests.Session()
     crawler = Crawler(session)

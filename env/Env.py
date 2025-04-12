@@ -8,16 +8,16 @@ class Env:
         
         fingerprints_store_path = os.path.join(os.path.abspath(__file__), "..","fingerprints_store")
         if file_name == None:
-            self.data_path = Env.getRandomJsonFile(fingerprints_store_path)
+            self.data_path = Env.get_random_json_file(fingerprints_store_path)
         else:
             self.data_path = os.path.join(fingerprints_store_path, file_name)
 
-        self.loadFromJson(self.data_path)
+        self.load_from_json(self.data_path)
         
     
     # 随机选择一个 .json 文件
     @staticmethod
-    def getRandomJsonFile(directory):
+    def get_random_json_file(directory):
         files = os.listdir(directory)
         json_files = [file for file in files if file.endswith('.json')]
         
@@ -47,7 +47,7 @@ class Env:
             json.dump(self.data, file, ensure_ascii=False, indent=4)
     
     # 用 json 文件获取环境
-    def loadFromJson(self, file_path):
+    def load_from_json(self, file_path):
         if not file_path.endswith(".json"):
             raise ValueError("这不是一个 JSON 文件")
         
