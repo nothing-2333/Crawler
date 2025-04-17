@@ -3,12 +3,11 @@ import os
 import random
 
 class Env:
-    def __init__(self, fingerprints_file_name=None, tls_file_name='1.json'):
+    def __init__(self, fingerprints_file_name=None):
         self.fingerprints = {}
         self.tls = {}
         
         self.fingerprints_path = Env._get_file_path("fingerprints-store", fingerprints_file_name)
-        self.tls_store_path = Env._get_file_path("tls-store", tls_file_name)
 
         # 加载文件到实例
         Env.load_from_json(self.fingerprints, self.fingerprints_path)

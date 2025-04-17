@@ -8,16 +8,13 @@ from miniDB import miniDB
 debug = logger.debug
 
 if __name__ == "__main__":
-    session = requests.Session()
-    crawler = Crawler(session)
+    crawler = Crawler({"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)..."})
     crawler.encrypt.test()
-    
+        
     env = Env()
     debug(env.fingerprints)
 
     db = miniDB()
-    
-    # 更新数据
     db.update("name", "Alice")
     db.update("age", 30)
     print(db.keys())

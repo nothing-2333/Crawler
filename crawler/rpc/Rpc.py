@@ -3,6 +3,7 @@ import json
 import multiprocessing
 import os
 import subprocess
+import time
 
 class Rpc:
     def __init__(self):
@@ -46,7 +47,7 @@ class Rpc:
         return port
     
     # 建立本地 Socket
-    def build_socket(self, server, init_code):
+    def build_socket(self, server):
         # 分配一个随机空闲端口
         port = Rpc.get_random_free_port()
         
@@ -54,12 +55,11 @@ class Rpc:
         self.process.daemon = True  # 设置为守护进程：主进程结束时，子进程也结束
         self.process.start()
 
+        # 等待一会子线程启动
+        time.sleep(0.5)
+
         self.socket.connect(('127.0.0.1', port))
         self.port = port
-        
-        # 加载初始化代码
-        self.call("eval", "let require = global.require;") # 正确处理 require
-        self.call("eval", init_code)
     
     # 关闭资源
     def close(self):
@@ -91,8 +91,14 @@ class Rpc:
         jscode = ""
         for path in file_paths:
             jscode += Rpc.read_code(path)
+            jscode += ";\n"
+            
         js = Rpc()
-        js.build_socket(Rpc.server_of_js, jscode)
+        js.build_socket(Rpc.server_of_js)
+        
+        # 加载初始化代码
+        js.call("eval", "let require = global.require;") # 正确处理 require
+        js.call("eval", jscode)
         
         return js
             
