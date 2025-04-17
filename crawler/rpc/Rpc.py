@@ -81,7 +81,7 @@ class Rpc:
     # 运行制定 js 文件，启动 socket 服务
     @staticmethod
     def server_of_js(port):
-        file_path = os.path.join(__file__, "..", "server_of_js.js")
+        file_path = os.path.join(__file__, "..", "server-of-js.js")
         command = ["node", file_path, str(port)]
         subprocess.run(command, check=True)
     

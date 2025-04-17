@@ -13,7 +13,7 @@ if __name__ == "__main__":
     crawler.encrypt.test()
     
     env = Env()
-    debug(env.data)
+    debug(env.fingerprints)
 
     db = miniDB()
     

@@ -3,7 +3,7 @@ import os
 
 class miniDB:
     def __init__(self):
-        self.file_path = os.path.join(os.path.abspath(__file__), "..","data.json")
+        self.file_path = os.path.abspath(os.path.join(os.path.abspath(__file__), "..","data.json"))
 
         with open(self.file_path, 'r') as file:
             self.data = json.load(file)
