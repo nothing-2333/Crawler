@@ -1,17 +1,15 @@
 import os
 from loguru import logger
 
-from ..rpc import Rpc
+from .rpc import Rpc
 
 debug = logger.debug
 
 class Encrypt:
-    def __init__(self):
-        options = {
-            "js": ["base.js"]
-        }
-        self.build_server(options)
-    
+    def __init__(self, options=None):
+        if options != None:
+            self.build_server(options)
+
     # 根据配置建立服务
     def build_server(self, options: dict):
         for sever_name, file_names in options.items():
@@ -25,7 +23,6 @@ class Encrypt:
                 raise ValueError("暂不支持此服务。")
     # 测试
     def test(self):
-        # 用 js 测试，不用的话可以换成别的
         if self.js:
             result = self.js.call("test", {"a": 1, "b": 2})
             debug(result)

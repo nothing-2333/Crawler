@@ -56,7 +56,7 @@ class Rpc:
         self.process.start()
 
         # 等待一会子线程启动
-        time.sleep(0.5)
+        time.sleep(1)
 
         self.socket.connect(('127.0.0.1', port))
         self.port = port
@@ -83,7 +83,7 @@ class Rpc:
     def server_of_js(port):
         file_path = os.path.join(__file__, "..", "server-of-js.js")
         command = ["node", file_path, str(port)]
-        subprocess.run(command, check=True)
+        subprocess.run(command, check=True, start_new_session=True)
     
     # 启动 js 的 RPC 服务
     @staticmethod

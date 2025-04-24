@@ -1,17 +1,17 @@
 import json
 import os
 import random
+from loguru import logger
+
+debug = logger.debug
 
 class Env:
     def __init__(self, fingerprints_file_name=None):
         self.fingerprints = {}
-        self.tls = {}
-        
         self.fingerprints_path = Env._get_file_path("fingerprints-store", fingerprints_file_name)
-
-        # 加载文件到实例
+        debug(f"选择环境文件 ---> {self.fingerprints_path}")
+        
         Env.load_from_json(self.fingerprints, self.fingerprints_path)
-        Env.load_from_json(self.tls, self.fingerprints_path)
     
     def get(self, key, obj_name="fingerprints"):
         if obj_name == "fingerprints":
