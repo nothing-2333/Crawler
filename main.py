@@ -1,4 +1,3 @@
-import requests
 from loguru import logger
 
 from crawler import Crawler, Env, Encrypt, Request

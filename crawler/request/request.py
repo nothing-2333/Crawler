@@ -45,7 +45,7 @@ class Request:
 
         return self._cookies
 
-    def _get_cookies_str(self, cookies=None):
+    def get_cookies_str(self, cookies=None):
         if cookies == None:
             cookies = self._cookies
             
@@ -65,7 +65,7 @@ class Request:
         if mode == 'dict':
             return self._get_cookies_dict()
         elif mode == 'str':
-            return self._get_cookies_str()
+            return self.get_cookies_str()
         else:
             return None
 
@@ -75,7 +75,7 @@ class Request:
         if custom_headers:
             headers.update(custom_headers)
         # 添加编码后的 cookie 到头（需符合 HTTP 协议规范）
-        cookies_str = self._get_cookies_str(cookies)
+        cookies_str = self.get_cookies_str(cookies)
         if cookies_str:
             headers["cookie"] = cookies_str
         return headers
