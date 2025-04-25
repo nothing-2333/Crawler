@@ -14,70 +14,182 @@ class Request:
         self.base_headers = base_headers.copy()
         self.proxies = proxies.copy() if proxies else {}
         
-        # cookies 中存入已经 url 编码过的值
+        # cookies 中我习惯存入已经 url 编码过的值
         self._cookies = {}
     
+    @staticmethod
+    def unquote(string: str):
+        '''集成一份解码'''
+        return unquote(string)
+    
+    @staticmethod
+    def quote(string: str):
+        '''集成一份编码'''
+        return quote(string)
+    
     def delete_cookie(self, key):
+        '''删除 self._cookies 中某条 cookie'''
         if key in self._cookies:
             del self._cookies[key]
 
-    def get_cookie(self, key, is_decode=True):
+    @staticmethod
+    def _is_correct_func_for_handling_cookie_str(func):
+        '''判断穿的参数是否合规'''
+        if func == Request.quote or func == Request.unquote:
+            return True
+        else:
+            return False
+        
+    @staticmethod
+    def cookies_dict_to_str(cookies: dict):
+        '''将 cookie 的 dict 转化为 str , 如果 value 是 None, 就会只有 key'''
+        if not isinstance(cookies, dict):
+            raise TypeError("cookies 需要传入一个 dict")
+        
+        cookie_parts = []
+        for key, value in cookies.items():
+            if value != None:
+                if not isinstance(value, str):
+                    raise TypeError("cookie 的 value 值必须是 str 类型 或者 None。")
+                cookie_parts.append(f"{key}={value}")
+            else:
+                cookie_parts.append(key)
+        
+        return "; ".join(cookie_parts)
+    
+    @staticmethod
+    def cookies_str_to_dict(cookies: str):
+        '''将 cookie 的 str 转化为 dict'''
+        if not isinstance(cookies, str):
+            raise TypeError("cookies 需要传入一个 str ")
+        
+        items = cookies.split(";")
+        result = {}
+        for item in items:
+            cookie_list = item.strip().split("=", 1)
+            if len(cookie_list) == 2:
+                result[cookie_list[0]] = cookie_list[1]
+            else:
+                logger.warning(f"无法转成 dict 的 cookie: " + item)
+                
+        return result
+
+    @staticmethod
+    def handle_cookies_dict(cookies, need_keys: list=None, func=None):
+        '''传进来一个 cookies dict 处理 need_keys func, 实现了深拷贝'''
+        if not isinstance(cookies, dict):
+            raise TypeError("cookies 需要传入一个 dict")
+        
+        result = {} # python 是引用传递, 要新建一个对象
+        if need_keys == None:
+            if func == None:
+                result = cookies.copy()
+            elif Request._is_correct_func_for_handling_cookie_str(func):
+                for key, value in cookies.items():
+                    result[func(key)] = func(value)
+            else:
+                raise TypeError("func 参数非法")
+        elif isinstance(need_keys, list):
+            for need_key in need_keys:
+                if need_key not in cookies:
+                    raise ValueError("need_keys 包含的 key 在 cookies 中找不到")
+                else:
+                    if func == None:
+                        result[need_key] = cookies[need_key]
+                    elif Request._is_correct_func_for_handling_cookie_str(func):
+                        result[func(need_key)] = func(cookies[need_key])
+                    else:
+                        raise TypeError("func 参数非法")
+        else:
+            raise TypeError("need_keys 参数非法")
+        
+        return result
+
+    def get_cookie(self, key, func=None):
+        '''获取 cookie 可以设置是否编码、解码'''
         result = self._cookies[key]
 
-        if is_decode:
-            return unquote(result)
-        return result
+        if func == None:
+            return result
+        elif Request._is_correct_func_for_handling_cookie_str(func):
+            return func(result)
+        else:
+            raise TypeError("func 参数非法")
     
-    def set_cookie(self, key, value, is_encode=True):
+    def set_cookie(self, key, value, func=None):
+        '''设置 cookie 可以设置是否编码、解码'''
         if not isinstance(value, str) and value is not None:
             raise TypeError("cookie 的 value 值必须是 str 类型 或者 None。")
         
-        if is_encode:
-            key = quote(key)
+        if Request._is_correct_func_for_handling_cookie_str(func):
+            key = func(key)
             if value != None:
-                value = quote(value)
+                value = func(value)
+        elif func != None:
+            raise TypeError("func 参数非法")
+        
         self._cookies[key] = value
 
-    def _get_cookies_dict(self):
-        cookies = self._cookies
-        if not cookies:
-            return {}
+    def _get_cookies_dict(self, cookies=None, need_keys: list=None, func=None):
+        '''获取 cookie 到 dict , 附带多个功能'''
+        
+        # 处理 cookies
+        if cookies == None:
+            cookies = self._cookies
+        elif isinstance(cookies, str):
+            cookies = Request.cookies_str_to_dict(cookies)
+        else:
+            raise TypeError("cookies 参数类型非法")
+        
+        # 处理 need_keys 和 func
+        return Request.handle_cookies_dict(cookies, need_keys, func)
 
-        return self._cookies
-
-    def get_cookies_str(self, cookies=None):
+    def _get_cookies_str(self, cookies=None, need_keys: list=None, func=None):
+        '''获取 cookie 到 str , 附带多个功能'''
+        
+        # 处理 cookies
         if cookies == None:
             cookies = self._cookies
             
         if not cookies:
             return ""
         
-        cookie_parts = []
-        for k, v in cookies.items():
-            if v != None:
-                cookie_parts.append(f"{k}={v}")
-            else:
-                cookie_parts.append(k)
+        # 处理 need_keys 和 func
+        tmp = Request.handle_cookies_dict(cookies, need_keys, func)
         
-        return "; ".join(cookie_parts)
+        return Request.cookies_dict_to_str(tmp)
     
-    def get_cookies(self, mode):
+    def get_cookies(self, mode, cookies=None, need_keys: list=None, func=None):
+        '''获取 cookies 的对外接口'''
+        
         if mode == 'dict':
-            return self._get_cookies_dict()
+            return self._get_cookies_dict(cookies, need_keys, func)
         elif mode == 'str':
-            return self.get_cookies_str()
+            return self._get_cookies_str(cookies, need_keys, func)
         else:
             return None
 
-    def _prepare_headers(self, custom_headers: Optional[Dict], cookies: Optional[Dict] = None) -> Dict:
-        """合并基础头与自定义头（自定义头优先级更高）"""
+    def set_cookies(self, cookies, func=None):
+        '''批量设置 cookies'''
+        
+        if isinstance(cookies, str):
+            cookies = Request.cookies_str_to_dict(cookies)
+        elif not isinstance(cookies, dict):
+            raise TypeError("cookies 必须是 dict 或者 str ")
+
+        for key, value in cookies.items():
+            self.set_cookie(key, value, func)
+
+    def _prepare_headers(self, custom_headers: Optional[Dict], cookies_str: str=None) -> Dict:
+        """合并基础头与自定义头并组合进 cookies"""
         headers = self.base_headers.copy()
         if custom_headers:
             headers.update(custom_headers)
-        # 添加编码后的 cookie 到头（需符合 HTTP 协议规范）
-        cookies_str = self.get_cookies_str(cookies)
-        if cookies_str:
-            headers["cookie"] = cookies_str
+            
+        if cookies_str == None:
+            cookies_str = self.get_cookies("str")
+        headers["cookie"] = cookies_str
+            
         return headers
 
     def _request(
@@ -85,7 +197,7 @@ class Request:
         method: str,
         url: str,
         headers: Optional[Dict] = None,
-        cookies: Optional[Dict] = None,
+        cookies: str = None,
         **kwargs
     ) -> requests.Response:
         """统一请求方法"""
@@ -102,10 +214,9 @@ class Request:
                 **kwargs
             )
             # 自动更新服务端返回的 cookie
-            for name, value in response.cookies.items():
-                print(value)
-                logger.info(f"服务器设置 cookie: {name} -> {value}")
-                self.set_cookie(name, value, False)
+            for key, value in response.cookies.items():
+                logger.info(f"服务器设置 cookie: {key} -> {value}")
+                self.set_cookie(key, value)
             return response
         except requests.RequestsError as e:
             raise RuntimeError(f"请求失败: {str(e)}") from e
@@ -117,7 +228,10 @@ class Request:
     def post(self, url: str, **kwargs) -> requests.Response:
         """发送 POST 请求"""
         return self._request("POST", url, **kwargs)
+    
+    
 # 示例使用
 if __name__ == "__main__":
-
-    pass
+    r = Request({'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36'})
+    
+    
