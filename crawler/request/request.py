@@ -69,6 +69,8 @@ class Request:
             cookie_list = item.strip().split("=", 1)
             if len(cookie_list) == 2:
                 result[cookie_list[0]] = cookie_list[1]
+            elif len(cookie_list) == 1:
+                result[cookie_list[0]] = None 
             else:
                 logger.warning(f"无法转成 dict 的 cookie: " + item)
                 
@@ -92,7 +94,7 @@ class Request:
         elif isinstance(need_keys, list):
             for need_key in need_keys:
                 if need_key not in cookies:
-                    raise ValueError("need_keys 包含的 key 在 cookies 中找不到")
+                    raise ValueError("need_keys 包含的 key 在 cookies 中找不到: ", need_key)
                 else:
                     if func == None:
                         result[need_key] = cookies[need_key]
@@ -197,11 +199,11 @@ class Request:
         method: str,
         url: str,
         headers: Optional[Dict] = None,
-        cookies: str = None,
+        cookies_str: str | None = None,
         **kwargs
     ) -> requests.Response:
         """统一请求方法"""
-        merged_headers = self._prepare_headers(headers, cookies)
+        merged_headers = self._prepare_headers(headers, cookies_str)
 
         try:
             # 发送请求
@@ -214,9 +216,27 @@ class Request:
                 **kwargs
             )
             # 自动更新服务端返回的 cookie
-            for key, value in response.cookies.items():
-                logger.info(f"服务器设置 cookie: {key} -> {value}")
-                self.set_cookie(key, value)
+            set_cookie_headers = response.headers.get_list('Set-Cookie')
+            for set_cookie in set_cookie_headers:
+                cookie_parts = set_cookie.split(';')
+                name_value = cookie_parts[0].split('=', 1)
+                name = name_value[0].strip()
+                value = name_value[1].strip()
+                logger.info(f"服务器设置 cookie: {name} -> {value}")
+                self.set_cookie(name, value)
+                
+                for part in cookie_parts[1:]:
+                    key, *values = part.split('=', 1)
+                    key = key.strip()
+                    if values:
+                        value = values[0].strip()
+                        if key.lower() == 'max-age':
+                            # 将 Max-Age 的值从秒转换为小时
+                            max_age_seconds = int(value)
+                            max_age_hours = max_age_seconds / 3600
+                            logger.info(f"    {key}: {max_age_hours:.2f}h")
+                        else:
+                            logger.info(f"    {key}: {value}")
             return response
         except requests.RequestsError as e:
             raise RuntimeError(f"请求失败: {str(e)}") from e

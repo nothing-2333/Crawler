@@ -3,22 +3,26 @@ import os
 import random
 from loguru import logger
 
-debug = logger.debug
 
 class Env:
     def __init__(self, fingerprints_file_name=None):
         self.fingerprints = {}
+        
+        self.fingerprints_file_name = fingerprints_file_name
         self.fingerprints_path = Env._get_file_path("fingerprints-store", fingerprints_file_name)
-        debug(f"选择环境文件 ---> {self.fingerprints_path}")
+        logger.info(f"选择环境文件 ---> {self.fingerprints_path}")
         
         Env.load_from_json(self.fingerprints, self.fingerprints_path)
     
-    def get(self, key, obj_name="fingerprints"):
-        if obj_name == "fingerprints":
-            return self.fingerprints.get(key, None)
-        elif obj_name == "tls":
-            return self.tls.get(key, None)
+    def get(self, key):
+        return self.fingerprints.get(key, None)
     
+    def get_fingerprints_file_name(self) -> str:
+        '''获取选择环境的文件名'''
+        if self.fingerprints_file_name == None:
+            self.fingerprints_file_name = os.path.basename(self.fingerprints_path)
+        return self.fingerprints_file_name
+            
     # 获取要加载的文件路径：若没指定就随机选择
     @staticmethod
     def _get_file_path(dir_name, file_name=None):
