@@ -7,15 +7,17 @@ class CookieValue:
         else:
             raise ValueError("value 值不符合要求")
         
-        if expires is None or isinstance(expires, datetime):
+        if expires is None or isinstance(expires, str):
             self.expires: datetime | None = expires
         else:
             raise ValueError("expires 值不符合要求")
 
     def is_expired(self) -> bool:
         '''判断是否过期'''
-        if self.expires and datetime.now() > self.expires:
-            return True
+        if self.expires:
+            expires = datetime.strptime(self.expires, "%Y-%m-%d %H:%M:%S.%f")
+            if datetime.now() > expires:
+                return True
         return False
     
     def get(self) -> dict:

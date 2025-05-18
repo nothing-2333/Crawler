@@ -4,7 +4,6 @@ import json
 from .encrypt import Encrypt
 from .request import Request
 from .env import Env
-from .serializer import dumps, loads
 
 debug = logger.debug
 

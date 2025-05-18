@@ -1,8 +1,9 @@
 from loguru import logger
 
-from crawler import Crawler, Env, Encrypt, Request
+from crawler import Crawler, Env, Encrypt, Request, dumps, loads
 
 debug = logger.debug
+
 
 
 if __name__ == "__main__":
@@ -18,7 +19,8 @@ if __name__ == "__main__":
     crawler = Crawler(env, encrypt, request)
 
     crawler.encrypt.test()
-    crawler.request.set_cookie("aa", "aa==aa", Request.get_datetime(), Request.quote)
-    import time
-    # time.sleep(1)
-    print(crawler.request.get_cookie("aa"))
+    crawler.request.set_cookie("aa", "aa==aa", Request.get_datetime(days=5), Request.quote)
+
+    a = dumps(crawler)
+    b = loads(a)
+    print(b.request.get_cookie("aa", True))

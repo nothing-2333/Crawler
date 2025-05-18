@@ -6,10 +6,10 @@ from .cookie_value import CookieValue
 class Cookies:
     def __init__(self, cookies=None):
         # 处理 cookies, 默认储存编码过的, 以 dict 形式储存
-        if cookies == None:
-            self._cookies: dict[str, CookieValue] = {}
-        else:
+        self._cookies: dict[str, CookieValue] = {}
+        if cookies is not None:
             self.set_cookies(cookies, lambda x: x)
+            
     
     def get_keys(self):
         '''获取全部的键值'''
@@ -32,9 +32,9 @@ class Cookies:
                 cookie_value["value"] = value_handler(cookie_value["value"])
                 self._cookies[key] = CookieValue.from_cookie_value(cookie_value)
                 if is_print:
-                    logger.info(f"设置 cookie: {key} -> {cookie_value["value"]}")
+                    logger.info(f"设置 cookie: {key} -> {cookie_value['value']}")
                     if 'expires' in cookie_value:
-                            logger.info(f"    expires: {cookie_value["expires"]}")
+                            logger.info(f"    expires: {cookie_value['expires']}")
     
     def set_cookies(self, cookies: str | dict, value_handler):
         '''批量设置 cookies'''
@@ -146,9 +146,9 @@ class Cookies:
     @staticmethod
     def get_datetime(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0):
         '''集成一份获取日期'''
-        return datetime.now() + timedelta(days, seconds, microseconds, milliseconds, minutes, hours, weeks)
+        return str(datetime.now() + timedelta(days, seconds, microseconds, milliseconds, minutes, hours, weeks))
     
     @staticmethod
     def GMT2datetime(time_str):
         '''GMT 转为当前时区的 datetime'''
-        return datetime.strptime(time_str, "%a, %d %b %Y %H:%M:%S GMT")
+        return str(datetime.strptime(time_str, "%a, %d %b %Y %H:%M:%S GMT"))
