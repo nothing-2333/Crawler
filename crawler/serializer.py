@@ -6,18 +6,18 @@ from .env import Env
 from .crawler import Crawler
 
 
-def dumps(crawler: Crawler) -> str:
+def dumps(crawler: Crawler, targets: list = []) -> str:
     '''将实例输出为字符串 json'''
     data = {}
-    if isinstance(crawler.env, Env):
+    if isinstance(crawler.env, Env) and crawler.env in targets:
         data['env'] = {
             "fingerprints_file_name": crawler.env.get_fingerprints_file_name()
         }
-    if isinstance(crawler.encrypt, Encrypt):
+    if isinstance(crawler.encrypt, Encrypt) and crawler.encrypt in targets:
         data['encrypt'] = {
             "options": crawler.encrypt.options
         }
-    if isinstance(crawler.request, Request):
+    if isinstance(crawler.request, Request) and crawler.request in targets:
         data["request"] = {
             "base_headers": crawler.request.base_headers,
             "cookies": crawler.request.get_cookies_dict(True),
@@ -37,7 +37,7 @@ def loads(data: str) -> Crawler:
     if 'encrypt' in data:
         crawler.encrypt = Encrypt(data['encrypt']["options"])
     if 'request' in data:
-        crawler.request = Request(data["request"]["base_headers"], data["request"]["cookies"], data["request"]["proxies"], data["request"]["is_print"],)
+        crawler.request = Request(data["request"]["base_headers"], data["request"]["cookies"], data["request"]["proxies"], data["request"]["is_print"])
     crawler.tmp = data["tmp"]
     
     return crawler

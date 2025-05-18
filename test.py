@@ -21,6 +21,6 @@ if __name__ == "__main__":
     crawler.encrypt.test()
     crawler.request.set_cookie("aa", "aa==aa", Request.get_datetime(days=5), Request.quote)
 
-    a = dumps(crawler)
+    a = dumps(crawler, [crawler.env, crawler.request])
     b = loads(a)
-    print(b.request.get_cookie("aa", True))
+    print(b.encrypt)
