@@ -1,5 +1,4 @@
 from loguru import logger
-from datetime import datetime, timedelta
 
 from .cookie_value import CookieValue
 
@@ -90,7 +89,7 @@ class Cookies:
             
             # 先处理 cookie
             cookie = Cookies.str2dict(cookie)
-            key = cookie.keys()[0] # cookie.keys() 必然只有一个
+            key = list(cookie.keys())[0] # cookie.keys() 必然只有一个
             value = cookie[key]
             
             expires = None
@@ -100,10 +99,10 @@ class Cookies:
                 for property_name, property_value in property.items():
                     
                     if property_name.lower() == 'max-age':
-                        expires = Cookies.get_datetime(seconds=int(property_value))
+                        expires = CookieValue.get_datetime(seconds=int(property_value))
 
                     if expires == None and property_name.lower() == 'expires': # 'max-age' 优先级更高
-                        expires = Cookies.GMT2datetime(property_value)
+                        expires = CookieValue.GMT2datetime(property_value)
             
             self.set_cookie(key, value, expires, value_handler, is_print)
 
@@ -143,12 +142,3 @@ class Cookies:
                        
         return result
     
-    @staticmethod
-    def get_datetime(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0):
-        '''集成一份获取日期'''
-        return str(datetime.now() + timedelta(days, seconds, microseconds, milliseconds, minutes, hours, weeks))
-    
-    @staticmethod
-    def GMT2datetime(time_str):
-        '''GMT 转为当前时区的 datetime'''
-        return str(datetime.strptime(time_str, "%a, %d %b %Y %H:%M:%S GMT"))

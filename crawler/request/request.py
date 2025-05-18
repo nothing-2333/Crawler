@@ -4,6 +4,7 @@ from urllib.parse import quote, unquote
 from loguru import logger
 
 from .cookies import Cookies
+from .cookie_value import CookieValue
 
 class Request:
     def __init__(self, base_headers, cookies=None, proxies=None, is_print=True):
@@ -38,7 +39,7 @@ class Request:
         if cookies == None:
             cookies_str = self.cookies.get_cookies_str(self.cookies.get_keys())
         elif isinstance(cookies, str):
-            cookies_str = cookies_str
+            cookies_str = cookies
         elif isinstance(cookies, list):
             cookies_str = self.cookies.get_cookies_str(cookies)
         else:
@@ -97,7 +98,7 @@ class Request:
         '''删除 self._cookies 中某条 cookie'''
         return self.cookies.delete_cookie(key)
         
-    def get_cookie(self, key, has_property=False, ) -> str | bool | None | dict:
+    def get_cookie(self, key, has_property=False) -> str | bool | None | dict:
         '''获取 cookie 过期返回 False, 没有报错'''
         return self.cookies.get_cookie(key, has_property)
 
@@ -145,12 +146,12 @@ class Request:
     @staticmethod
     def get_datetime(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0):
         '''集成一份获取日期'''
-        return Cookies.get_datetime(days, seconds, microseconds, milliseconds, minutes, hours, weeks)
+        return CookieValue.get_datetime(days, seconds, microseconds, milliseconds, minutes, hours, weeks)
 
     @staticmethod
     def GMT2datetime(time_str):
         '''GMT 转为当前时区的 datetime'''
-        return Cookies.GMT2datetime(time_str)
+        return CookieValue.GMT2datetime(time_str)
     
     @staticmethod
     def dict2str(cookies: dict):

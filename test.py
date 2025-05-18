@@ -1,6 +1,6 @@
 from loguru import logger
 
-from crawler import Crawler, Env, Encrypt, Request, dumps, loads
+from crawler import Crawler, Env, Encrypt, Request, dumps, loads, CookieValue, Cookies
 
 debug = logger.debug
 
@@ -21,6 +21,12 @@ if __name__ == "__main__":
     crawler.encrypt.test()
     crawler.request.set_cookie("aa", "aa==aa", Request.get_datetime(days=5), Request.quote)
 
-    a = dumps(crawler, [crawler.env, crawler.request])
-    b = loads(a)
-    print(b.encrypt)
+    gmt_time_str = "Mon, 26 May 2025 12:30:45 GMT"
+
+    crawler.request.set_cookie("bb", "aa", Request.GMT2datetime(gmt_time_str), Request.quote)
+    
+    print(crawler.request.get_cookie("bb"))
+    
+    a = dumps(crawler)
+    print(a)
+   
