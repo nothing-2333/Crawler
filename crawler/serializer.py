@@ -24,7 +24,8 @@ def dumps(crawler: Crawler) -> str:
             "proxies": crawler.request.proxies,
             "is_print": crawler.request.is_print
         }
-
+    data["tmp"] = crawler.tmp
+    
     return json.dumps(data, ensure_ascii=False, indent=4)
 
 def loads(data: str) -> Crawler:
@@ -37,5 +38,6 @@ def loads(data: str) -> Crawler:
         crawler.encrypt = Encrypt(data['encrypt']["options"])
     if 'request' in data:
         crawler.request = Request(data["request"]["base_headers"], data["request"]["cookies"], data["request"]["proxies"], data["request"]["is_print"],)
-        
+    crawler.tmp = data["tmp"]
+    
     return crawler
