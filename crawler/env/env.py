@@ -8,7 +8,7 @@ class Env:
     def __init__(self, fingerprints_file_name=None):
         self.fingerprints = {}
         
-        self.fingerprints_file_name = fingerprints_file_name
+        self._fingerprints_file_name = fingerprints_file_name
         self.fingerprints_path = Env._get_file_path("fingerprints-store", fingerprints_file_name)
         logger.info(f"选择环境文件 ---> {self.fingerprints_path}")
         
@@ -19,9 +19,9 @@ class Env:
     
     def get_fingerprints_file_name(self) -> str:
         '''获取选择环境的文件名'''
-        if self.fingerprints_file_name == None:
-            self.fingerprints_file_name = os.path.basename(self.fingerprints_path)
-        return self.fingerprints_file_name
+        if self._fingerprints_file_name == None:
+            self._fingerprints_file_name = os.path.basename(self.fingerprints_path)
+        return self._fingerprints_file_name
             
     # 获取要加载的文件路径：若没指定就随机选择
     @staticmethod

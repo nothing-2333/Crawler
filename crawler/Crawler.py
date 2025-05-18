@@ -1,8 +1,10 @@
 from loguru import logger 
+import json
 
 from .encrypt import Encrypt
 from .request import Request
 from .env import Env
+from .serializer import dumps, loads
 
 debug = logger.debug
 
@@ -11,6 +13,7 @@ class Crawler:
         self.env = env
         self.encrypt = encrypt
         self.request = request
+        self.tmp = {}
         
         
-        self.tmp_args = {}
+        

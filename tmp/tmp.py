@@ -1,7 +1,6 @@
+import json
 
-a = [1, 2, 3]
-
-b = ["a", "b", "c"]
-
-
-print(dict(zip(b, a)))
+ada = {}
+ada["aaa"]  = 1
+# 打印结果
+print("aaa".split("=", 1))
