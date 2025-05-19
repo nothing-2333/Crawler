@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     gmt_time_str = "Mon, 26 May 2025 12:30:45 GMT"
 
-    crawler.request.set_cookie("bb", "aa", Request.GMT2datetime(gmt_time_str), Request.quote)
+    crawler.request.set_cookie("bb", None, Request.GMT2datetime(gmt_time_str), Request.quote)
     
     print(crawler.request.get_cookie("bb"))
     

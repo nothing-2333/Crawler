@@ -7,11 +7,11 @@ debug = logger.debug
 
 class Encrypt:
     def __init__(self, options=None):
+        self.options = options
+        
         if options != None:
             self.build_server(options)
-        
-        self.options = options
-
+    
     # 根据配置建立服务
     def build_server(self, options: dict):
         for sever_name, file_names in options.items():

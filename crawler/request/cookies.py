@@ -43,7 +43,7 @@ class Cookies:
                 self.set_cookie(key, value, None, value_handler, False)
         elif isinstance(cookies, dict):
             for key, value in cookies.items():
-                if isinstance(value, str):
+                if isinstance(value, str) or value is None:
                     self.set_cookie(key, value, None, value_handler, False)
                 if isinstance(value, dict):
                     self.set_cookie(key, None, None, value_handler, False, cookie_value=value)
