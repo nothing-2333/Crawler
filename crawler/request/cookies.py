@@ -72,8 +72,7 @@ class Cookies:
         
         for need_key in need_keys:
             value = self.get_cookie(need_key, has_property)
-            if value is not False:
-                result[need_key] = value
+            result[need_key] = value
             
         return result
 
