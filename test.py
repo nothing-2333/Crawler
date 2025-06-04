@@ -19,14 +19,14 @@ if __name__ == "__main__":
     crawler = Crawler(env, encrypt, request)
 
     crawler.encrypt.test()
-    crawler.request.set_cookie("aa", "aa==aa", Request.get_datetime(days=5), Request.quote)
+    crawler.request.set_cookie("aa", "aa==aa", Request.get_datetime(), Request.quote)
 
-    gmt_time_str = "Mon, 26 May 2025 12:30:45 GMT"
-
-    crawler.request.set_cookie("bb", None, Request.GMT2datetime(gmt_time_str), Request.quote)
+    print(crawler.request.has_cookie("aa"))
+    print(crawler.request.has_cookie("bb"))
     
-    print(crawler.request.get_cookie("bb"))
+    
     
     a = dumps(crawler)
-    print(a)
+    crawler = loads(a)
+    print(crawler.request.has_cookie("aa"))
    

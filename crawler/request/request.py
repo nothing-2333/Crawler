@@ -97,6 +97,10 @@ class Request:
     def delete_cookie(self, key):
         '''删除 self._cookies 中某条 cookie'''
         return self.cookies.delete_cookie(key)
+    
+    def has_cookie(self, key):
+        '''判断 self._cookies 是否存在某条 cookie'''
+        return self.cookies.has_cookie(key)
         
     def get_cookie(self, key, has_property=False) -> str | bool | None | dict:
         '''获取 cookie 过期返回 False, 没有报错'''

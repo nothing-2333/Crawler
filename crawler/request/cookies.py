@@ -55,6 +55,16 @@ class Cookies:
         if key in self._cookies:
             del self._cookies[key]
             
+    def has_cookie(self, key):
+        '''判断 self._cookies 是否存在某条 cookie'''
+        if key in self._cookies:
+            if self.get_cookie(key, False) == False:
+                return False
+            else:
+                return True
+        else:
+            return False
+    
     def get_cookie(self, key, has_property: bool) -> str | bool | None | dict:
         '''获取 cookie 过期返回 False, 没有报错'''
         cookie_value = self._cookies[key]
@@ -69,10 +79,11 @@ class Cookies:
     def get_cookies_dict(self, has_property: bool, need_keys: list[str]) -> dict:
         '''获取 cookie 到 dict, 实现了深拷贝'''
         result = {}
-        
+
         for need_key in need_keys:
             value = self.get_cookie(need_key, has_property)
-            result[need_key] = value
+            if value is not False:
+                result[need_key] = value
             
         return result
 
